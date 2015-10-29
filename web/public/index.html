@@ -2,11 +2,35 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <!--<script src="../../node_modules/jquery/dist/jquery.min.js"></script> -->
 </head>
 <body>
   Enter a URL here:
   <form method="POST">
     <input type="input" name="url"></input>
   </form>
+  <script>
+    $('form').on('submit', function(e){
+      e.preventDefault();
+      var text = $('form :input')[0]; 
+      //console.log(text.value);
+      //ajax request of type POST
+      $.ajax({
+        url: 'http://127.0.0.1:8080',
+        type: 'POST',
+        data: text.value,
+        contentType: 'text/plain',
+        success: function (data) {
+          console.log('URL sent');
+          console.log(data);
+        },
+        error: function (data) {
+          // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+          console.error('chatterbox: Failed to send message');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
