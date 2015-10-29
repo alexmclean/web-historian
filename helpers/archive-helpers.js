@@ -25,17 +25,28 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf8', function(err, data){
+    if (err) throw err;
+    return callback(data.split("\n"));
+  });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(url, callback) {
+  exports.readListOfUrls(function(urls){
+    return callback(_.contains(urls, url))
+  });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(data, callback) {
+  var writer = fs.createWriteStream(exports.paths.list, {flags:'a'});
+  writer.write(data + "\n");
+  return callback(data);
 };
 
 exports.isUrlArchived = function() {
 };
 
+//http://stackoverflow.com/questions/5801453/in-node-js-express-how-do-i-download-a-page-and-gets-its-html
 exports.downloadUrls = function() {
 };

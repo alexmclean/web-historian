@@ -8,26 +8,20 @@ var fs = require('fs');
 exports.handleRequest = function (req, res) {
   if(req.method === "GET"){
     var parsedURL = url.parse(req.url);
-    console.log(parsedURL);
-    //res.writeHead()
-    fs.readFile('./public/index.html', function (err, data) {
-      if (err) throw err;
-      console.log(data);
-      http.serveAssets(res, data);
-    });
+    //if(parsedURL.pathname === '/'){
+      http.serveIndex(res);
+    //}
 
   } else if(req.method === "POST"){
-    console.log(archive.paths.list);
-    var writer = fs.createWriteStream(archive.paths.list, {flags:'a'});
+    
     var data = '';
     req.on('data', function(chunk) {
       data += chunk;
     });
 
     req.on('end', function(){
-      console.log(data);
-      writer.write(data);
-      http.handleResponse(res, 200, data);
+      archive.addUrlToList(data, function(x){return x;});
+      http.handleResponse(res, 201, data);
     });
 
   } else {

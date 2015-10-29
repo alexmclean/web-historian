@@ -25,6 +25,12 @@ exports.handleResponse = function(response, statusCode, data){
   response.end();
 };
 
+exports.serveIndex = function(response){
+  fs.readFile(archive.paths.siteAssets + "/index.html", 'utf8', function (err, indexData) {
+    if (err) throw err;
+    exports.serveAssets(response, indexData);
+  });
+}
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
