@@ -10,25 +10,6 @@
     <input type="input" name="url"></input>
   </form>
   <script>
-    $('form').on('submit', function(e){
-      e.preventDefault();
-      var text = $('form :input')[0]; 
-      //ajax request of type POST
-      $.ajax({
-        url: 'http://127.0.0.1:8080',
-        type: 'POST',
-        data: text.value,
-        contentType: 'text/plain',
-        success: function (data) {
-          console.log('URL sent');
-          console.log(data);
-        },
-        error: function (data) {
-          // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-          console.error('chatterbox: Failed to send message');
-        }
-      });
-    });
   </script>
 </body>
 </html>

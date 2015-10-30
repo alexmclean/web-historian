@@ -1,4 +1,10 @@
 body {
   margin : 0px;
   font-family: arial, sans-serif;
+  color: green;
+}
+
+form {
+  width: 40%;
+  margin: auto;
 }

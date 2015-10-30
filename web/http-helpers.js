@@ -2,6 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var archive = require('../helpers/archive-helpers');
 
+
 exports.headers = headers = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -10,29 +11,43 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
-  res.writeHead(200, headers);
-  res.write(asset);
-  res.end();
+exports.serveAssets = function(res, asset, contentType, statusCode, callback) {
+  statusCode = statusCode || 200;
+  fs.readFile(asset, 'utf8', function (err, assetData) {
+    if (err) throw err;
+    headers['Content-Type'] = contentType;
+    res.writeHead(statusCode, headers);
+    res.write(assetData);
+    res.end();
+  });
 };
 
-exports.handleResponse = function(response, statusCode, data){
+exports.handleResponse = function(response, statusCode, data, location){
+  if(location){
+    headers["Location"] = location;
+    headers["Content-Type"] = "text/html";
+  }
   response.writeHead(statusCode, headers);
   response.write(data);
   response.end();
 };
 
-exports.serveIndex = function(response){
+exports.serveIndex = function(response, filePath){
   fs.readFile(archive.paths.siteAssets + "/index.html", 'utf8', function (err, indexData) {
     if (err) throw err;
     exports.serveAssets(response, indexData);
   });
-}
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+};
+
+exports.getData = function(req, callback){
+  var data = '';
+  req.on('data', function(chunk) {
+    data += chunk;
+  });
+
+  req.on('end', function(){
+    callback(data);
+  });
+};
 
 // As you progress, keep thinking about what helper functions you can put here!
